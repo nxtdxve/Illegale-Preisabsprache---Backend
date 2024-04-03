@@ -1,5 +1,5 @@
-from .email_service import send_email
-from .sms_service import send_sms
+# from .email_service import send_email
+# from .sms_service import send_sms
 from app.database.db_connection import mongo
 from bson import ObjectId
 
@@ -15,6 +15,8 @@ def send_price_change_notifications(product_id, new_price, retailer):
 
     for subscription in subscriptions:
         if subscription.get('email'):
-            send_email(subscription['email'], "Preisänderung", message)
+            # send_email(subscription['email'], "Preisänderung", message)
+            ...
         if subscription.get('phone_number'):
-            send_sms(subscription['phone_number'], message)
+            # send_sms(subscription['phone_number'], message)
+            ...
