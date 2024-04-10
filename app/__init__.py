@@ -13,12 +13,16 @@ def create_app():
     init_db(app)
 
     from .routes.product_routes import product_bp
+
     app.register_blueprint(product_bp)
     from .routes.retailer_routes import retailer_bp
+
     app.register_blueprint(retailer_bp)
     from .routes.subscription_routes import subscription_bp
+
     app.register_blueprint(subscription_bp)
     from .routes.notification_routes import notification_bp
+
     app.register_blueprint(notification_bp)
 
     return app
