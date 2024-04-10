@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_cors import CORS
-from .database.db_connection import init_db
+
 from config import Config
+
+from .database.db_connection import init_db
 
 
 def create_app():
