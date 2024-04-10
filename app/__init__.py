@@ -1,10 +1,13 @@
 from flask import Flask
+from flask_cors import CORS
 from .database.db_connection import init_db
 from config import Config
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    CORS(app, resources={r"/*": {"origins": "*"}})
     
     init_db(app)
     
