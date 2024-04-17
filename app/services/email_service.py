@@ -1,11 +1,11 @@
 import requests
 import json
-from flask import current_app
+from config import Config
 
 def send_email(emails, subject, message, category="Price Change"):
     url = "https://bulk.api.mailtrap.io/api/send"
     headers = {
-        "Authorization": f"Bearer {current_app.config['MAILTRAP_API_KEY']}",
+        "Authorization": f"Bearer {Config.MAILTRAP_TOKEN}",
         "Content-Type": "application/json"
     }
     payload = {
