@@ -3,6 +3,7 @@ from app.database.db_connection import mongo
 from bson import ObjectId
 from . import subscription_bp
 
+@subscription_bp.route('/subscribe', methods=['POST'])
 def subscribe():
     data = request.json
     product_id = data.get('product_id')
