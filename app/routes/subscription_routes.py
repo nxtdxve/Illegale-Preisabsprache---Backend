@@ -3,7 +3,6 @@ from app.database.db_connection import mongo
 from bson import ObjectId
 from . import subscription_bp
 
-@subscription_bp.route('/subscribe', methods=['POST'])
 def subscribe():
     data = request.json
     product_id = data.get('product_id')
@@ -13,9 +12,21 @@ def subscribe():
     if not product_id or not (email or phone_number):
         return jsonify({"error": "Produkt-ID und mindestens eine Kontaktmethode (E-Mail oder Telefonnummer) sind erforderlich."}), 400
 
-    # Überprüfe, ob das Produkt existiert, ausser wenn das Wildcard-Abonnement gewählt wird
-    if product_id != "*" and not mongo.db.products.find_one({"_id": ObjectId(product_id)}):
-        return jsonify({"error": "Produkt nicht gefunden."}), 404
+    # Konvertiere product_id zu ObjectId, wenn es kein Wildcard ist
+    if product_id != "*":
+        if not mongo.db.products.find_one({"_id": ObjectId(product_id)}):
+            return jsonify({"error": "Produkt nicht gefunden."}), 404
+        data['product_id'] = ObjectId(product_id)  # Speichere als ObjectId
+
+    # Prüfe auf bestehendes Abonnement
+    existing_subscription = mongo.db.subscriptions.find_one({
+        "product_id": data['product_id'],
+        "email": email,
+        "phone_number": phone_number
+    })
+
+    if existing_subscription:
+        return jsonify({"error": "Abonnement bereits vorhanden."}), 409
 
     # Füge das Abonnement hinzu
     mongo.db.subscriptions.insert_one(data)
@@ -26,13 +37,15 @@ def unsubscribe():
     data = request.json
     product_id = data.get('product_id')
     email = data.get('email')
-    phone_number = data.get('phone_number')
 
-    if not product_id or not (email or phone_number):
-        return jsonify({"error": "Produkt-ID und mindestens eine Kontaktmethode (E-Mail oder Telefonnummer) sind erforderlich."}), 400
+    if not product_id or not email:
+        return jsonify({"error": "Produkt-ID und mindestens eine E-Mail sind erforderlich."}), 400
     
+    if product_id != "*":
+        data['product_id'] = ObjectId(product_id)  # Konvertiere für die Konsistenz
+
     # Entferne das Abonnement
-    delete_result = mongo.db.subscriptions.delete_one(data)
+    delete_result = mongo.db.subscriptions.delete_one({"product_id": data['product_id'], "email": email})
     if delete_result.deleted_count == 0:
         return jsonify({"error": "Abonnement nicht gefunden oder bereits gekündigt."}), 404
 

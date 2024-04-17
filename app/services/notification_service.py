@@ -6,8 +6,9 @@ from datetime import datetime, timedelta
 
 def send_price_change_notifications(product_id, new_price, retailer_id):
     subscriptions = mongo.db.subscriptions.find({"product_id": ObjectId(product_id)})
-    
+
     product = mongo.db.products.find_one({"_id": ObjectId(product_id)})
+
     retailer = mongo.db.retailers.find_one({"_id": ObjectId(retailer_id)})
     if not product:
         print("Produkt nicht gefunden.")
@@ -20,7 +21,7 @@ def send_price_change_notifications(product_id, new_price, retailer_id):
     subject = "Preisänderung!"
 
     # Sammle alle E-Mail-Adressen in einer Liste
-    email_list = [subscription['email'] for subscription in subscriptions if 'email' in subscription]
+    email_list = [sub['email'] for sub in subscriptions if 'email' in sub]
 
     # Versende die E-Mail nur, wenn es Abonnements gibt
     if email_list:
