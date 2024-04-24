@@ -9,7 +9,7 @@ def notify_price_change():
     data = request.json
     product_id = data.get('product_id')
     new_price = data.get('new_price')
-    retailer = data.get('retailer')
+    retailer_id = data.get('retailer_id')
     
-    send_price_change_notifications(product_id, new_price, retailer)
+    send_price_change_notifications(product_id, new_price, retailer_id)
     return jsonify({"message": "Benachrichtigungen wurden versendet."}), 200
