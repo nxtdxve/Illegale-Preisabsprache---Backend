@@ -115,12 +115,8 @@
             "header": [],
             "url": {
               "raw": "{{URL}}/products",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "products"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["products"]
             }
           },
           "response": []
@@ -201,13 +197,8 @@
             "header": [],
             "url": {
               "raw": "{{URL}}/products/65bcf14db518d62b9c9010bc",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "products",
-                "65bcf14db518d62b9c9010bc"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["products", "65bcf14db518d62b9c9010bc"]
             }
           },
           "response": []
@@ -270,12 +261,8 @@
             },
             "url": {
               "raw": "{{URL}}/products",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "products"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["products"]
             }
           },
           "response": []
@@ -303,9 +290,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {}
               }
@@ -331,12 +316,8 @@
             },
             "url": {
               "raw": "{{URL}}/products",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "products"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["products"]
             }
           },
           "response": []
@@ -421,12 +402,8 @@
             "header": [],
             "url": {
               "raw": "{{URL}}/retailers",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "retailers"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["retailers"]
             }
           },
           "response": []
@@ -501,13 +478,8 @@
             "header": [],
             "url": {
               "raw": "{{URL}}/retailers/65bcf14db518d62b9c9010ba",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "retailers",
-                "65bcf14db518d62b9c9010ba"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["retailers", "65bcf14db518d62b9c9010ba"]
             }
           },
           "response": []
@@ -559,9 +531,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {}
               }
@@ -581,12 +551,8 @@
             },
             "url": {
               "raw": "{{URL}}/subscribe",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "subscribe"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["subscribe"]
             }
           },
           "response": []
@@ -651,12 +617,8 @@
             },
             "url": {
               "raw": "{{URL}}/unsubscribe",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "unsubscribe"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["unsubscribe"]
             }
           },
           "response": []
@@ -732,12 +694,8 @@
             },
             "url": {
               "raw": "{{URL}}/notify_price_change",
-              "host": [
-                "{{URL}}"
-              ],
-              "path": [
-                "notify_price_change"
-              ]
+              "host": ["{{URL}}"],
+              "path": ["notify_price_change"]
             }
           },
           "response": []
@@ -750,18 +708,14 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     },
     {
       "listen": "test",
       "script": {
         "type": "text/javascript",
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     }
   ],
