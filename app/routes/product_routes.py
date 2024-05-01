@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 from app.database.db_connection import mongo
 from app.utils.price_utils import get_price_details
 from app.utils.url_utils import extract_domain
+from app.utils.auth_utils import require_api_key
 from . import product_bp
 
 @product_bp.route('/products', methods=['GET'])
@@ -83,3 +84,23 @@ def add_product():
     result = mongo.db.products.insert_one(data)
     
     return jsonify({"message": "Produkt erfolgreich hinzugefügt", "product_id": str(result.inserted_id)}), 201
+
+@product_bp.route('/products', methods=['DELETE'])
+@require_api_key
+def delete_product():
+    data = request.json
+    product_id = data.get('product_id')
+
+    if not product_id:
+        return jsonify({"error": "Produkt-ID ist erforderlich."}), 400
+
+    try:
+        oid = ObjectId(product_id)
+    except:
+        return jsonify({"error": "Ungültige Produkt-ID"}), 400
+
+    delete_result = mongo.db.products.delete_one({'_id': oid})
+    if delete_result.deleted_count == 0:
+        return jsonify({"error": "Produkt nicht gefunden"}), 404
+
+    return jsonify({"message": "Produkt erfolgreich gelöscht"}), 200

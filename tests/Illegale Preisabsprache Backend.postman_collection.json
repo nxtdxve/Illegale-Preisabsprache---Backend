@@ -1,0 +1,785 @@
+{
+	"info": {
+		"_postman_id": "70e36faa-af15-416c-9754-24a0bba34c6d",
+		"name": "Illegale Preisabsprache Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26137074"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "10 | Liste aller Produkte",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(product) {\r",
+									"        pm.expect(product).to.include.all.keys('_id', 'name', 'category', 'retailer_urls', 'price_details');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Verify retailer_urls array presence and expected number of elements\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(product => {\r",
+									"        pm.expect(product.retailer_urls).to.exist;\r",
+									"        pm.expect(product.retailer_urls).to.be.an('array');\r",
+									"        pm.expect(product.retailer_urls).to.have.lengthOf.at.least(1);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Each product's _id is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(product) {\r",
+									"        pm.expect(product._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the format of retailer_id in each retailer_urls object\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function(product) {\r",
+									"        pm.expect(product.retailer_urls).to.be.an('array');\r",
+									"        product.retailer_urls.forEach(function(retailer) {\r",
+									"            pm.expect(retailer.retailer_id).to.be.an('object');\r",
+									"            pm.expect(retailer.retailer_id.$oid).to.be.a('string');\r",
+									"        });\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Verify price_records array is present for each product and contains the expected number of elements\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(product => {\r",
+									"        pm.expect(product.price_details.price_records).to.exist;\r",
+									"        pm.expect(product.price_details.price_records).to.be.an('array');\r",
+									"        pm.expect(product.price_details.price_records).to.have.lengthOf.at.least(1);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the format of timestamp in each price_records object\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"\r",
+									"    responseData.forEach(function(product) {\r",
+									"        pm.expect(product.price_details.price_records).to.be.an('array');\r",
+									"\r",
+									"        product.price_details.price_records.forEach(function(record) {\r",
+									"            pm.expect(record.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}$/);\r",
+									"        });\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/products",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11 | Einzelnes Produkt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has all required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property(\"_id\");\r",
+									"    pm.expect(responseData).to.have.property(\"name\");\r",
+									"    pm.expect(responseData).to.have.property(\"category\");\r",
+									"    pm.expect(responseData).to.have.property(\"retailer_urls\").to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer URLs contain correct fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    responseData.retailer_urls.forEach(function (retailer) {\r",
+									"        pm.expect(retailer).to.have.property(\"retailer_id\").to.have.property(\"$oid\");\r",
+									"        pm.expect(retailer).to.have.property(\"url\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate the presence of price details\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property(\"price_details\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Price details have correct fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    const details = responseData.price_details;\r",
+									"    pm.expect(details).to.have.property(\"price_records\").to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Price records contain necessary fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    responseData.price_details.price_records.forEach(function (record) {\r",
+									"        pm.expect(record).to.have.property(\"retailer_id\");\r",
+									"        pm.expect(record).to.have.property(\"price\");\r",
+									"        pm.expect(record).to.have.property(\"timestamp\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Timestamp format is correct\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    responseData.price_details.price_records.forEach(function (record) {\r",
+									"        pm.expect(record.timestamp).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}000$/);\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/products/65bcf14db518d62b9c9010bc",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"products",
+								"65bcf14db518d62b9c9010bc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12 | Hinzufügen eines Produktes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has 'message'\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Produkt erfolgreich hinzugefügt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has 'product_id'\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.product_id).to.not.be.undefined;\r",
+									"});\r",
+									"\r",
+									"// Script to save the product_id to an environment variable for use in subsequent requests\r",
+									"let response = pm.response.json();\r",
+									"if (response && response.product_id) {\r",
+									"    pm.collectionVariables.set(\"product_id\", response.product_id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"testprodukt\",\r\n  \"category\": \"test\",\r\n  \"retailer_urls\": [\r\n    {\r\n      \"retailer_id\": \"65bcf14db518d62b9c9010ba\",\r\n      \"url\": \"https://www.hornbach.ch/test\"\r\n    },\r\n    {\r\n      \"retailer_id\": \"65bcf14db518d62b9c9010bb\",\r\n      \"url\": \"https://www.bauhaus.ch/test\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/products",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13 | Lösche ein Produkt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product successfully deleted\", function () {\r",
+									"    pm.expect(pm.response.json().message).to.include(\"erfolgreich gelöscht\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{X-API-Key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"{{product_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/products",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retailer",
+			"item": [
+				{
+					"name": "20 | Liste aller Retailer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is an array\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each retailer has required properties\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    responseData.forEach(function (retailer) {\r",
+									"        pm.expect(retailer).to.have.property('_id');\r",
+									"        pm.expect(retailer).to.have.property('name');\r",
+									"        pm.expect(retailer).to.have.property('price_policy');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check structure of _id field\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    responseData.forEach(function (retailer) {\r",
+									"        pm.expect(retailer._id).to.have.property('$oid');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer names are strings\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    responseData.forEach(function (retailer) {\r",
+									"        pm.expect(retailer.name).to.be.a('string');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Price policies are strings\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    responseData.forEach(function (retailer) {\r",
+									"        pm.expect(retailer.price_policy).to.be.a('string');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer IDs are formatted correctly\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    responseData.forEach(function (retailer) {\r",
+									"        pm.expect(retailer._id.$oid).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/retailers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"retailers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "21 | Einzelner Retailer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has required properties\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property('_id');\r",
+									"    pm.expect(responseData).to.have.property('name');\r",
+									"    pm.expect(responseData).to.have.property('price_policy');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check structure of _id field\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData._id).to.have.property('$oid');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer name is a string\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.name).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Price policy is a string\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.price_policy).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer ID is formatted correctly\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData._id.$oid).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Retailer name matches expected name\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.name).to.equal(\"Hornbach\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Price policy matches expected policy\", function () {\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.expect(responseData.price_policy).to.equal(\"Dauertiefpreise\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/retailers/65bcf14db518d62b9c9010ba",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"retailers",
+								"65bcf14db518d62b9c9010ba"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "30 | Subscribe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Wenn erfolgreich, setze den nächsten Request",
+									"if (pm.response.code === 201) {",
+									"    postman.setNextRequest(\"40 | Preisupdates senden\");",
+									"}",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response body has required message property\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Message property is a string\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Message content is correct\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.equal(\"Erfolgreich abonniert.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": \"65bcf14db518d62b9c9010bc\",\r\n  \"email\": \"ghostjidihd@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/subscribe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"subscribe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "31 | Unsubscribe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    postman.setNextRequest(null);",
+									"}",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response body has required message property\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Message property is a string\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Message content is correct\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.equal(\"Abonnement erfolgreich gekündigt.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": \"65bcf14db518d62b9c9010bc\",\r\n  \"email\": \"ghostjidihd@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/unsubscribe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"unsubscribe"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "40 | Preisupdates senden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    postman.setNextRequest(\"31 | Unsubscribe\");",
+									"}",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response body has required message property\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"pm.test(\"Message property is a string\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Message content is correct\", function () {",
+									"    let responseData = pm.response.json();",
+									"    pm.expect(responseData.message).to.equal(\"Benachrichtigungen wurden versendet.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "{{X-API-Key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": \"65bcf14db518d62b9c9010bc\",\r\n  \"new_price\": \"50\",\r\n  \"retailer_id\": \"65bcf14db518d62b9c9010bb\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/notify_price_change",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"notify_price_change"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "X-API-Key",
+			"value": "Enter API Key here",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "0",
+			"type": "string"
+		}
+	]
+}
