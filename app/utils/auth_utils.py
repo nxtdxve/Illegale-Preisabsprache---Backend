@@ -2,6 +2,9 @@ from flask import request, jsonify, current_app
 from functools import wraps
 
 def require_api_key(f):
+    """
+    Dekorator, der sicherstellt, dass die Anfrage einen gültigen API-Schlüssel enthält.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         api_key = current_app.config['API_KEY']

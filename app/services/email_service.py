@@ -3,6 +3,14 @@ import json
 from config import Config
 
 def send_email(emails, subject, message, category="Price Change"):
+    """
+    Versendet eine E-Mail an eine Liste von E-Mail-Adressen.
+
+    :param emails: Eine Liste von E-Mail-Adressen.
+    :param subject: Der Betreff der E-Mail.
+    :param message: Der Inhalt der E-Mail.
+    :param category: Die Kategorie der E-Mail.
+    """
     url = "https://bulk.api.mailtrap.io/api/send"
     headers = {
         "Authorization": f"Bearer {Config.MAILTRAP_TOKEN}",

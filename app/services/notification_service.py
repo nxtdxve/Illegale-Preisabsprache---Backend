@@ -5,6 +5,13 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 
 def send_price_change_notifications(product_id, new_price, retailer_id):
+    """
+    Versendet Benachrichtigungen über Preisänderungen an alle Abonnenten eines Produkts.
+
+    :param product_id: Die ID des Produkts.
+    :param new_price: Der neue Preis.
+    :param retailer_id: Die ID des Einzelhändlers.
+    """
     subscriptions = mongo.db.subscriptions.find({"product_id": ObjectId(product_id)})
 
     product = mongo.db.products.find_one({"_id": ObjectId(product_id)})
