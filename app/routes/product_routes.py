@@ -71,11 +71,10 @@ def add_product():
 
     if len(urls) < 2:
         return (
-            jsonify(
-                {
-                    "error": "Mindestens zwei URLs von verschiedenen Einzelhändlern müssen angegeben werden."
-                }
-            ),
+            jsonify({
+                "error":
+                "Mindestens zwei URLs von verschiedenen Einzelhändlern müssen angegeben werden."
+            }),
             400,
         )
 
@@ -86,32 +85,36 @@ def add_product():
             {
                 "name": {
                     "$in": [
-                        re.compile(f"^{domain}$", re.IGNORECASE) for domain in domains
+                        re.compile(f"^{domain}$", re.IGNORECASE)
+                        for domain in domains
                     ]
                 }
             },
-            {"_id": 1, "name": 1},
-        )
-    )
+            {
+                "_id": 1,
+                "name": 1
+            },
+        ))
 
     if len(retailer_data) != len(set(domains)):
         return (
-            jsonify(
-                {
-                    "error": "Mindestens eine URL entspricht keinem registrierten Einzelhändler."
-                }
-            ),
+            jsonify({
+                "error":
+                "Mindestens eine URL entspricht keinem registrierten Einzelhändler."
+            }),
             400,
         )
 
     updated_retailer_urls = []
     for url in urls:
         domain = extract_domain(url["url"])
-        retailer = next((r for r in retailer_data if r["name"].lower() == domain), None)
+        retailer = next(
+            (r for r in retailer_data if r["name"].lower() == domain), None)
         if retailer:
-            updated_retailer_urls.append(
-                {"retailer_id": retailer["_id"], "url": url["url"]}
-            )
+            updated_retailer_urls.append({
+                "retailer_id": retailer["_id"],
+                "url": url["url"]
+            })
 
     data["retailer_urls"] = updated_retailer_urls
 
@@ -119,12 +122,10 @@ def add_product():
     result = mongo.db.products.insert_one(data)
 
     return (
-        jsonify(
-            {
-                "message": "Produkt erfolgreich hinzugefügt",
-                "product_id": str(result.inserted_id),
-            }
-        ),
+        jsonify({
+            "message": "Produkt erfolgreich hinzugefügt",
+            "product_id": str(result.inserted_id),
+        }),
         201,
     )
 
