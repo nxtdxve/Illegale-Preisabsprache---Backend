@@ -38,7 +38,7 @@ def list_products():
 def get_product(product_id):
     """
 
-    :param product_id: 
+    :param product_id:
 
     """
     try:
