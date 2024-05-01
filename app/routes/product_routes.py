@@ -15,6 +15,7 @@ from . import product_bp
 
 @product_bp.route("/products", methods=["GET"])
 def list_products():
+    """ """
     products = mongo.db.products.find({})
     result = []
 
@@ -34,6 +35,11 @@ def list_products():
 
 @product_bp.route("/products/<product_id>", methods=["GET"])
 def get_product(product_id):
+    """
+
+    :param product_id: 
+
+    """
     try:
         oid = ObjectId(product_id)
     except:
@@ -58,6 +64,7 @@ def get_product(product_id):
 
 @product_bp.route("/products", methods=["POST"])
 def add_product():
+    """ """
     data = request.json
     urls = data.get("retailer_urls", [])
 
@@ -124,6 +131,7 @@ def add_product():
 @product_bp.route("/products", methods=["DELETE"])
 @require_api_key
 def delete_product():
+    """ """
     data = request.json
     product_id = data.get("product_id")
 
