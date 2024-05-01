@@ -5,6 +5,12 @@ from decimal import Decimal
 from datetime import datetime
 
 def get_price_details(product_id):
+    """
+    Ermittelt die Preisdetails für ein Produkt anhand seiner ID.
+
+    :param product_id: Die ID des Produkts.
+    :return: Ein Dictionary mit den Preisdetails.
+    """
     if isinstance(product_id, str):
         product_id = ObjectId(product_id)
     
