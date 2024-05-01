@@ -1,12 +1,15 @@
-from flask import jsonify, Response, request
-from bson.json_util import dumps
-from urllib.parse import urlparse
 import re
+from urllib.parse import urlparse
+
+from bson.json_util import dumps
 from bson.objectid import ObjectId
+from flask import Response, jsonify, request
+
 from app.database.db_connection import mongo
+from app.utils.auth_utils import require_api_key
 from app.utils.price_utils import get_price_details
 from app.utils.url_utils import extract_domain
-from app.utils.auth_utils import require_api_key
+
 from . import product_bp
 
 
