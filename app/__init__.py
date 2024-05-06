@@ -2,10 +2,9 @@ from flask import Flask
 from flask_apscheduler import APScheduler
 from flask_cors import CORS
 
+from .database.db_connection import init_db
 from app.services.notification_service import send_weekly_updates
 from config import Config
-
-from .database.db_connection import init_db
 
 # initialisiere den Scheduler
 scheduler = APScheduler()
