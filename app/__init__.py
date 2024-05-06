@@ -31,7 +31,10 @@ def create_app():
 
     scheduler.init_app(app)
 
-    @scheduler.task("cron", id="send_weekly_updates", week="*", day_of_week="sun")
+    @scheduler.task("cron",
+                    id="send_weekly_updates",
+                    week="*",
+                    day_of_week="sun")
     def schedule_weekly_updates():
         """ """
         send_weekly_updates()
