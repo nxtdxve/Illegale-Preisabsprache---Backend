@@ -9,6 +9,7 @@ from app.services.notification_service import send_weekly_updates
 # initialisiere den Scheduler
 scheduler = APScheduler()
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -21,12 +22,12 @@ def create_app():
             ]
         }
     })
-    
+
     init_db(app)
 
     scheduler.init_app(app)
 
-    @scheduler.task('cron', id='send_weekly_updates', week='*' , day_of_week='sun')
+    @scheduler.task('cron', id='send_weekly_updates', week='*', day_of_week='sun')
     def schedule_weekly_updates():
         send_weekly_updates()
 
